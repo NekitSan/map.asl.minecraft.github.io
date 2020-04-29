@@ -1,27 +1,5 @@
 document.querySelector(".wrap").oncontextmenu = cmenu; function cmenu() { return false; }
 
-function deletePointBD()
-{ 
-	$(".pointDelete").on('click', function(){
-	var idPoint = $(this).attr('id');
-	$.ajax({
-		url: "scripts/php/deletepoint.php",
-		type: "POST",
-		data: ({
-			id: idPoint
-		}),
-		dataType: "text",
-		success: reloding
-	});
-	});
-	
-}
-
-function reloding()
-{
-   location.reload();
-}
-
 $(document).ready(function() {
 	$("#map2d").contextmenu(function(e){
 		$('.modal').fadeIn();
@@ -30,7 +8,7 @@ $(document).ready(function() {
 		var relX = (e.pageX - parentOffset.left) - 278;
 		var relY = (e.pageY - parentOffset.top) + 1;
 
-		let coord = new realCoord(relX, relY);
+		let coord = new calcRealCoord(relX, relY);
 		var trueCoord = coord.creaetRealCoord();
 
 		relX = (relX + 278);
@@ -43,7 +21,9 @@ $(document).ready(function() {
 		$("#positionBlockPointX").val(CoordBlockPointX);
 		$("#positionBlockPointY").val(CoordBlockPointY);
 
-		console.log(trueCoord[0],trueCoord[1],'\n',CoordBlockPointX,CoordBlockPointY)
+		console.log(trueCoord[0],trueCoord[1],'\n',CoordBlockPointX,CoordBlockPointY);
+		
+		return false;
 	});
 
 	$("#button_creat").on("click", function(){
@@ -62,6 +42,7 @@ $(document).ready(function() {
             dataType: "html",
             success: reloding
         });
+		return false;
 	});
 
 	$('.modal-close').click(function() {
@@ -77,6 +58,29 @@ $(document).ready(function() {
 	});	
 
 });
+
+function deletePointBD()
+{ 
+	$(".pointDelete").on('click', function(){
+		var idPoint = $(this).attr('id');
+		$.ajax({
+			url: "scripts/php/deletepoint.php",
+			type: "POST",
+			data: ({
+				id: idPoint
+			}),
+			dataType: "text",
+			success: reloding
+		});
+		return false;
+	});
+	
+}
+
+function reloding()
+{
+   location.reload();
+}
 
 const maxcoord = 4480;
 
@@ -107,7 +111,7 @@ function editCoord(a)
 	return test;
 }
 
-class realCoord
+class calcRealCoord
 {
 	constructor(realcoordX, realcoordY)
 	{
